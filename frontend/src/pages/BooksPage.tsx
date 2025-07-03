@@ -13,8 +13,20 @@ import {
   useGetBooksQuery,
   useUpdateBookMutation,
 } from "../features/api/apiSlice";
+import type { Book } from "../shared/types"; // adjust if needed
 
-const initialFormState = {
+// This matches your form state fields (no _id, no createdAt/updatedAt)
+type BookFormState = {
+  title: string;
+  author: string;
+  genre: string;
+  isbn: string;
+  description: string;
+  copies: number;
+  available: boolean;
+};
+
+const initialFormState: BookFormState = {
   title: "",
   author: "",
   genre: "",
@@ -27,12 +39,12 @@ const initialFormState = {
 const itemsPerPage = 10;
 
 const BooksPage = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editBookData, setEditBookData] = useState<any>(null);
-  const [formData, setFormData] = useState(initialFormState);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [editBookData, setEditBookData] = useState<Book | null>(null);
+  const [formData, setFormData] = useState<BookFormState>(initialFormState);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -51,8 +63,9 @@ const BooksPage = () => {
   const [createBook] = useCreateBookMutation();
   const [deleteBook] = useDeleteBookMutation();
   const [updateBook, { isLoading: isUpdating }] = useUpdateBookMutation();
-  const books = data?.data || [];
-  const totalBooks = data?.total || 0;
+
+  const books: Book[] = data?.data || [];
+  const totalBooks = data?.total ?? 0;
   const totalPages = Math.ceil(totalBooks / itemsPerPage);
   const availableBooks = books.filter((b) => b.available).length;
   const totalCopies = books.reduce((sum, b) => sum + b.copies, 0);
@@ -65,12 +78,12 @@ const BooksPage = () => {
   const handleFormChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]:
         type === "checkbox"
-          ? checked
+          ? (e.target as HTMLInputElement).checked
           : type === "number"
           ? parseInt(value) || 0
           : value,
@@ -80,16 +93,20 @@ const BooksPage = () => {
   const handleEditFormChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value, type, checked } = e.target;
-    setEditBookData((prev: any) => ({
-      ...prev,
-      [name]:
-        type === "checkbox"
-          ? checked
-          : type === "number"
-          ? parseInt(value) || 0
-          : value,
-    }));
+    const { name, value, type } = e.target;
+    setEditBookData((prev) =>
+      prev
+        ? {
+            ...prev,
+            [name]:
+              type === "checkbox"
+                ? (e.target as HTMLInputElement).checked
+                : type === "number"
+                ? parseInt(value) || 0
+                : value,
+          }
+        : prev
+    );
   };
 
   const handleAddSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -104,10 +121,16 @@ const BooksPage = () => {
       toast.success("Book added successfully!");
       setIsAddModalOpen(false);
       setFormData(initialFormState);
-    } catch (error: any) {
-      toast.error(
-        error?.data?.message || "Failed to add book. Please try again."
-      );
+    } catch (error: unknown) {
+      const errMsg =
+        typeof error === "object" &&
+        error !== null &&
+        "data" in error &&
+        typeof (error as { data?: { message?: string } }).data?.message ===
+          "string"
+          ? (error as { data?: { message?: string } }).data!.message
+          : "Failed to add book. Please try again.";
+      toast.error(errMsg);
     } finally {
       setIsSubmitting(false);
     }
@@ -115,6 +138,7 @@ const BooksPage = () => {
 
   const handleEditSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!editBookData) return;
     try {
       const payload = {
         ...editBookData,
@@ -124,10 +148,16 @@ const BooksPage = () => {
       toast.success("Book updated successfully!");
       setIsEditModalOpen(false);
       setEditBookData(null);
-    } catch (error: any) {
-      toast.error(
-        error?.data?.message || "Failed to update book. Please try again."
-      );
+    } catch (error: unknown) {
+      const errMsg =
+        typeof error === "object" &&
+        error !== null &&
+        "data" in error &&
+        typeof (error as { data?: { message?: string } }).data?.message ===
+          "string"
+          ? (error as { data?: { message?: string } }).data!.message
+          : "Failed to update book. Please try again.";
+      toast.error(errMsg);
     }
   };
 
@@ -147,15 +177,21 @@ const BooksPage = () => {
       try {
         await deleteBook(bookId).unwrap();
         toast.success("Book deleted successfully!");
-      } catch (error: any) {
-        toast.error(
-          error?.data?.message || "Failed to delete book. Please try again."
-        );
+      } catch (error: unknown) {
+        const errMsg =
+          typeof error === "object" &&
+          error !== null &&
+          "data" in error &&
+          typeof (error as { data?: { message?: string } }).data?.message ===
+            "string"
+            ? (error as { data?: { message?: string } }).data!.message
+            : "Failed to delete book. Please try again.";
+        toast.error(errMsg);
       }
     }
   };
 
-  const handleEdit = (book: any) => {
+  const handleEdit = (book: Book) => {
     setEditBookData(book);
     setIsEditModalOpen(true);
   };
@@ -250,7 +286,19 @@ const BooksPage = () => {
       <BookEditModal
         open={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        formData={editBookData || initialFormState}
+        formData={
+          editBookData
+            ? {
+                title: editBookData.title,
+                author: editBookData.author,
+                genre: editBookData.genre,
+                isbn: editBookData.isbn,
+                description: editBookData.description ?? "",
+                copies: editBookData.copies,
+                available: editBookData.available,
+              }
+            : initialFormState
+        }
         onChange={handleEditFormChange}
         onSubmit={handleEditSubmit}
         isSubmitting={isUpdating}

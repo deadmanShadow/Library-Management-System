@@ -1,19 +1,6 @@
-import { ArrowUp, Book, Heart, Mail, MapPin, Phone, Send } from "lucide-react";
-import { useState } from "react";
+import { ArrowUp, Book, Heart, Mail, MapPin, Phone } from "lucide-react";
 
 const Footer = () => {
-  const [email, setEmail] = useState("");
-  const [isSubscribed, setIsSubscribed] = useState(false);
-
-  const handleSubscribe = (e) => {
-    e.preventDefault();
-    if (email) {
-      setIsSubscribed(true);
-      setEmail("");
-      setTimeout(() => setIsSubscribed(false), 3000);
-    }
-  };
-
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -62,33 +49,6 @@ const Footer = () => {
                 <h4 className="text-lg font-semibold mb-6 bg-gradient-to-r from-white to-indigo-200 bg-clip-text text-transparent">
                   Stay Connected
                 </h4>
-
-                <div className="mb-8">
-                  <p className="text-gray-300 mb-4">
-                    Subscribe to get updates on new books and library events.
-                  </p>
-                  <div className="relative">
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Enter your email"
-                      className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent text-white placeholder-gray-400 transition-all duration-300"
-                    />
-                    <button
-                      onClick={handleSubscribe}
-                      className="absolute right-2 top-2 p-2 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg hover:from-indigo-600 hover:to-purple-600 transition-all duration-300 transform hover:scale-105"
-                    >
-                      <Send className="h-4 w-4" />
-                    </button>
-                  </div>
-                  {isSubscribed && (
-                    <p className="text-green-400 text-sm mt-2 animate-fade-in">
-                      ✨ Thanks for subscribing!
-                    </p>
-                  )}
-                </div>
-
                 <div className="space-y-4">
                   <div className="flex items-center gap-3 text-gray-300">
                     <Mail className="h-5 w-5 text-indigo-400" />
@@ -141,22 +101,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes fade-in {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fade-in {
-          animation: fade-in 0.5s ease-out;
-        }
-      `}</style>
     </footer>
   );
 };

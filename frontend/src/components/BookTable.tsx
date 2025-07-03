@@ -1,21 +1,12 @@
-import { Book } from "lucide-react";
+import { Book as BookIcon } from "lucide-react";
+import type { Book } from "../shared/types";
 import BookActions from "./BookActions";
-
-interface Book {
-  _id: string;
-  title: string;
-  author: string;
-  genre: string;
-  isbn: string;
-  description: string;
-  copies: number;
-  available: boolean;
-}
 interface BookTableProps {
   books: Book[];
   onEdit: (book: Book) => void;
   onDelete: (bookId: string) => void;
 }
+
 const BookTable = ({ books, onEdit, onDelete }: BookTableProps) => (
   <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden">
     <div className="overflow-x-auto">
@@ -45,7 +36,7 @@ const BookTable = ({ books, onEdit, onDelete }: BookTableProps) => (
               <td colSpan={7} className="px-6 py-16 text-center">
                 <div className="flex flex-col items-center">
                   <div className="bg-gray-100 rounded-full p-4 mb-4">
-                    <Book className="h-8 w-8 text-gray-400" />
+                    <BookIcon className="h-8 w-8 text-gray-400" />
                   </div>
                   <p className="text-xl font-medium text-gray-500 mb-2">
                     No books found

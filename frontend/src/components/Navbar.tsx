@@ -1,6 +1,7 @@
 import { Book, BookOpen, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -33,7 +34,6 @@ const Navbar = () => {
 
       <div className="absolute top-2 left-10 w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full blur-xl opacity-20 animate-pulse"></div>
       <div className="absolute top-1 right-20 w-6 h-6 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full blur-xl opacity-20 animate-pulse delay-1000"></div>
-
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0 flex items-center gap-3 group cursor-pointer">
@@ -87,7 +87,6 @@ const Navbar = () => {
             </button>
           </div>
         </div>
-
         <div
           className={`md:hidden transition-all duration-500 ease-in-out ${
             isMenuOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
@@ -97,7 +96,7 @@ const Navbar = () => {
             <Link to="/borrow-summary">
               <MobileNavItem
                 icon={<BookOpen size={16} />}
-                text="Brrow Summary"
+                text="Borrow Summary"
                 description="Discover thousands of books"
               />
             </Link>
@@ -108,7 +107,14 @@ const Navbar = () => {
     </nav>
   );
 };
-const NavItem = ({ icon, text, gradient }) => {
+
+interface NavItemProps {
+  icon: React.ReactNode;
+  text: string;
+  gradient: string;
+}
+
+const NavItem: React.FC<NavItemProps> = ({ icon, text, gradient }) => {
   return (
     <a
       href="#"
@@ -117,20 +123,28 @@ const NavItem = ({ icon, text, gradient }) => {
       <div
         className={`absolute inset-0 bg-gradient-to-r ${gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300 rounded-xl`}
       ></div>
-
       <span className="relative z-10 group-hover:rotate-12 transition-transform duration-300">
         {icon}
       </span>
       <span className="relative z-10 font-medium tracking-wide text-sm">
         {text}
       </span>
-
-      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-x-[-100%] group-hover:translate-x-[100%] duration-700"></div>
+      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-[-100%] group-hover:translate-x-[100%] duration-700"></div>
     </a>
   );
 };
 
-const MobileNavItem = ({ icon, text, description }) => {
+interface MobileNavItemProps {
+  icon: React.ReactNode;
+  text: string;
+  description: string;
+}
+
+const MobileNavItem: React.FC<MobileNavItemProps> = ({
+  icon,
+  text,
+  description,
+}) => {
   return (
     <a
       href="#"

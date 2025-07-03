@@ -1,16 +1,29 @@
-function BorrowBookModal({ open, onClose, book, onSubmit, isLoading }) {
-  const [quantity, setQuantity] = useState(1);
-
-  const [dueDate, setDueDate] = useState(
+import React, { useState } from "react";
+import type { Book } from "../shared/types";
+interface BorrowBookModalProps {
+  open: boolean;
+  onClose: () => void;
+  book: Book;
+  onSubmit: (params: { quantity: number; dueDate: string }) => void;
+  isLoading: boolean;
+}
+const BorrowBookModal: React.FC<BorrowBookModalProps> = ({
+  open,
+  onClose,
+  book,
+  onSubmit,
+  isLoading,
+}) => {
+  const [quantity, setQuantity] = useState<number>(1);
+  const [dueDate, setDueDate] = useState<string>(
     new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
   );
-
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <form
-        onSubmit={(e) => {
+        onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
           onSubmit({
             quantity,
@@ -27,7 +40,9 @@ function BorrowBookModal({ open, onClose, book, onSubmit, isLoading }) {
             min={1}
             max={book.copies}
             value={quantity}
-            onChange={(e) => setQuantity(Number(e.target.value))}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setQuantity(Number(e.target.value))
+            }
             className="border p-2 rounded w-full"
             required
           />
@@ -40,7 +55,9 @@ function BorrowBookModal({ open, onClose, book, onSubmit, isLoading }) {
           <input
             type="date"
             value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setDueDate(e.target.value)
+            }
             className="border p-2 rounded w-full"
             required
           />
@@ -64,4 +81,5 @@ function BorrowBookModal({ open, onClose, book, onSubmit, isLoading }) {
       </form>
     </div>
   );
-}
+};
+export default BorrowBookModal;

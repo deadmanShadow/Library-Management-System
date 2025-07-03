@@ -16,7 +16,7 @@ export type BookPayload = Omit<Book, "_id" | "createdAt" | "updatedAt">;
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://lms-backend-one-beryl.vercel.app/api/",
+    baseUrl: "http://localhost:5000/api/",
   }),
   tagTypes: ["Books"],
   endpoints: (builder) => ({
@@ -32,7 +32,7 @@ export const api = createApi({
     //single get books
     getBookById: builder.query<{ data: Book }, string>({
       query: (id) => `books/${id}`,
-      providesTags: (result, error, id) => [{ type: "Books", id }],
+      providesTags: (_result, _error, id) => [{ type: "Books", id }],
     }),
 
     //createbooks
@@ -69,7 +69,7 @@ export const api = createApi({
 
     //borrowbook
     borrowBook: builder.mutation<
-      { data: any },
+      { data: Book },
       { book: string; quantity: number; dueDate: string }
     >({
       query: (body) => ({

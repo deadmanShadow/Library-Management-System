@@ -5,9 +5,30 @@ import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import { useBorrowBookMutation } from "../features/api/apiSlice";
 
-function BorrowBookModal({ open, onClose, book, onSubmit, isLoading }) {
-  const [quantity, setQuantity] = useState(1);
-  const [dueDate, setDueDate] = useState(
+type Book = {
+  _id: string;
+  title: string;
+  copies: number;
+  available: boolean;
+};
+
+type BorrowBookModalProps = {
+  open: boolean;
+  onClose: () => void;
+  book: Book;
+  onSubmit: (params: { quantity: number; dueDate: Date }) => void;
+  isLoading: boolean;
+};
+
+function BorrowBookModal({
+  open,
+  onClose,
+  book,
+  onSubmit,
+  isLoading,
+}: BorrowBookModalProps) {
+  const [quantity, setQuantity] = useState<number>(1);
+  const [dueDate, setDueDate] = useState<Date>(
     new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
   );
 
@@ -16,7 +37,7 @@ function BorrowBookModal({ open, onClose, book, onSubmit, isLoading }) {
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <form
-        onSubmit={(e) => {
+        onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
           onSubmit({
             quantity,
@@ -33,7 +54,9 @@ function BorrowBookModal({ open, onClose, book, onSubmit, isLoading }) {
             min={1}
             max={book.copies}
             value={quantity}
-            onChange={(e) => setQuantity(Number(e.target.value))}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setQuantity(Number(e.target.value))
+            }
             className="border p-2 rounded w-full"
             required
           />
@@ -45,7 +68,7 @@ function BorrowBookModal({ open, onClose, book, onSubmit, isLoading }) {
           <label className="block mb-1">Due Date</label>
           <DatePicker
             selected={dueDate}
-            onChange={(date) => setDueDate(date)}
+            onChange={(date: Date | null) => date && setDueDate(date)}
             minDate={new Date()}
             className="mb-4"
             dateFormat="yyyy-MM-dd"
@@ -75,10 +98,24 @@ function BorrowBookModal({ open, onClose, book, onSubmit, isLoading }) {
     </div>
   );
 }
-const BookActions = ({ book, onEdit, onDelete }) => {
+
+type BookActionsProps = {
+  book: Book;
+  onEdit: (book: Book) => void;
+  onDelete: (bookId: string) => void;
+};
+
+const BookActions = ({ book, onEdit, onDelete }: BookActionsProps) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [borrowBook, { isLoading }] = useBorrowBookMutation();
-  const handleBorrowSubmit = async ({ quantity, dueDate }) => {
+
+  const handleBorrowSubmit = async ({
+    quantity,
+    dueDate,
+  }: {
+    quantity: number;
+    dueDate: Date;
+  }) => {
     if (quantity < 1 || quantity > book.copies) {
       toast.error(`Quantity must be between 1 and ${book.copies}`);
       return;
@@ -91,8 +128,18 @@ const BookActions = ({ book, onEdit, onDelete }) => {
       }).unwrap();
       toast.success("Book borrowed successfully!");
       setModalOpen(false);
-    } catch (error) {
-      toast.error(error?.data?.message || "Failed to borrow book.");
+    } catch (error: unknown) {
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "data" in error &&
+        typeof (error as { data?: { message?: string } }).data?.message ===
+          "string"
+      ) {
+        toast.error((error as { data: { message: string } }).data.message);
+      } else {
+        toast.error("Failed to borrow book.");
+      }
     }
   };
 

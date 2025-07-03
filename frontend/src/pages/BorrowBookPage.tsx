@@ -13,6 +13,10 @@ const BorrowBookPage = () => {
   const [borrowBook, { isLoading: isBorrowing }] = useBorrowBookMutation();
   const [quantity, setQuantity] = useState(1);
 
+  const defaultDueDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .slice(0, 10);
+
   if (isLoading) return <div className="p-8 text-center">Loading...</div>;
   if (isError || !data)
     return <div className="p-8 text-center text-red-500">Book not found.</div>;
@@ -38,8 +42,18 @@ const BorrowBookPage = () => {
 
       toast.success("Book borrowed successfully!");
       navigate(`/borrow-summary/${book._id}`);
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to borrow book.");
+    } catch (error: unknown) {
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "data" in error &&
+        typeof (error as { data?: { message?: string } }).data?.message ===
+          "string"
+      ) {
+        toast.error((error as { data: { message: string } }).data.message);
+      } else {
+        toast.error("Failed to borrow book.");
+      }
     }
   };
 
