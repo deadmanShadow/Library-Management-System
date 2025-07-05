@@ -37,20 +37,6 @@ A fully functional and minimalist Library Management System built using **React*
 - **Forms & Dialogs** – Create/Edit/Borrow books via forms or modals.
 - **Footer** – Basic site info or credits.
 
----
-
-## 🗂️ Page Structure
-
-| Route             | Description                                           |
-| ----------------- | ----------------------------------------------------- |
-| `/books`          | List of all books with actions (Edit, Delete, Borrow) |
-| `/create-book`    | Form to add a new book                                |
-| `/books/:id`      | View single book details                              |
-| `/edit-book/:id`  | Edit a book                                           |
-| `/borrow/:bookId` | Borrow form for selected book                         |
-| `/borrow-summary` | View borrowed book summary                            |
-
----
 
 ## 🛠️ Tech Stack
 
