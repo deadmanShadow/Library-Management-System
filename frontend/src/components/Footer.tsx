@@ -1,12 +1,10 @@
 import { ArrowUp, Book, Heart, Mail, MapPin, Phone } from "lucide-react";
-
-const Footer = () => {
+const Footer: React.FC = () => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-
   return (
-    <footer className="relative bg-gradient-to-br from-slate-900 via-indigo-900 to-purple-900 text-white overflow-hidden">
+    <footer className="hidden md:block relative bg-gradient-to-br from-slate-900 via-indigo-900 to-purple-900 text-white overflow-hidden">
       <div className="absolute inset-0 opacity-10">
         <div
           className="absolute inset-0"
@@ -15,16 +13,14 @@ const Footer = () => {
           }}
         />
       </div>
-
       <div className="absolute top-10 left-10 w-20 h-20 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full blur-xl opacity-20 animate-pulse"></div>
       <div className="absolute top-32 right-20 w-16 h-16 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full blur-xl opacity-20 animate-pulse delay-1000"></div>
       <div className="absolute bottom-20 left-1/4 w-12 h-12 bg-gradient-to-r from-green-400 to-teal-400 rounded-full blur-xl opacity-20 animate-pulse delay-2000"></div>
-
       <div className="relative z-10">
         <div className="py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
-              <div className="lg:col-span-1">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+              <div>
                 <div className="flex items-center gap-3 mb-6">
                   <div className="bg-gradient-to-r from-indigo-400 to-purple-400 p-3 rounded-xl">
                     <Book className="h-8 w-8 text-white" />
@@ -44,8 +40,8 @@ const Footer = () => {
                   endless reading adventures.
                 </p>
               </div>
-
-              <div>
+              <div></div>
+              <div className="flex flex-col">
                 <h4 className="text-lg font-semibold mb-6 bg-gradient-to-r from-white to-indigo-200 bg-clip-text text-transparent">
                   Stay Connected
                 </h4>
@@ -75,7 +71,6 @@ const Footer = () => {
                 <Heart className="h-4 w-4 text-red-400 animate-pulse" />
                 <span>for book lovers everywhere.</span>
               </div>
-
               <div className="flex items-center gap-4">
                 <a
                   href="#"

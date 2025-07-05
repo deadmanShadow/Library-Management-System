@@ -13,7 +13,9 @@ interface BookFormModalProps {
   open: boolean;
   onClose: () => void;
   formData: BookFormData;
-  onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onChange: (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => void;
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
   isSubmitting: boolean;
 }
@@ -74,15 +76,23 @@ const BookFormModal = ({
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Genre *
               </label>
-              <input
-                type="text"
+              <select
                 name="genre"
                 value={formData.genre}
                 onChange={onChange}
                 required
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                placeholder="Enter genre"
-              />
+              >
+                <option value="" disabled>
+                  Select genre
+                </option>
+                <option value="FICTION">FICTION</option>
+                <option value="NON_FICTION">NON_FICTION</option>
+                <option value="SCIENCE">SCIENCE</option>
+                <option value="HISTORY">HISTORY</option>
+                <option value="BIOGRAPHY">BIOGRAPHY</option>
+                <option value="FANTASY">FANTASY</option>
+              </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">

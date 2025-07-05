@@ -13,9 +13,7 @@ import {
   useGetBooksQuery,
   useUpdateBookMutation,
 } from "../features/api/apiSlice";
-import type { Book } from "../shared/types"; // adjust if needed
-
-// This matches your form state fields (no _id, no createdAt/updatedAt)
+import type { Book } from "../shared/types";
 type BookFormState = {
   title: string;
   author: string;
@@ -59,11 +57,9 @@ const BooksPage = () => {
     page: currentPage,
     limit: itemsPerPage,
   });
-
   const [createBook] = useCreateBookMutation();
   const [deleteBook] = useDeleteBookMutation();
   const [updateBook, { isLoading: isUpdating }] = useUpdateBookMutation();
-
   const books: Book[] = data?.data || [];
   const totalBooks = data?.total ?? 0;
   const totalPages = Math.ceil(totalBooks / itemsPerPage);
@@ -72,11 +68,13 @@ const BooksPage = () => {
 
   const handleCloseAddModal = () => {
     setIsAddModalOpen(false);
-    navigate("/books", { replace: true });
+    navigate("/", { replace: true });
   };
 
   const handleFormChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value, type } = e.target;
     setFormData((prev) => ({
@@ -89,9 +87,10 @@ const BooksPage = () => {
           : value,
     }));
   };
-
   const handleEditFormChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value, type } = e.target;
     setEditBookData((prev) =>
@@ -108,7 +107,6 @@ const BooksPage = () => {
         : prev
     );
   };
-
   const handleAddSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -135,7 +133,6 @@ const BooksPage = () => {
       setIsSubmitting(false);
     }
   };
-
   const handleEditSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!editBookData) return;

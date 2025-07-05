@@ -14,7 +14,8 @@ const BorrowSummaryPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/borrow")
+    fetch("https://lms-backend-one-beryl.vercel.app/api/borrow")
+      // fetch("http://localhost:5000/api/borrow")
       .then((res) => res.json())
       .then((res) => {
         setSummary(res.data);

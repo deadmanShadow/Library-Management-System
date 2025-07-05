@@ -16,7 +16,8 @@ export type BookPayload = Omit<Book, "_id" | "createdAt" | "updatedAt">;
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/api/",
+    baseUrl: "https://lms-backend-one-beryl.vercel.app/api/",
+    // baseUrl: "http://localhost:5000/api",
   }),
   tagTypes: ["Books"],
   endpoints: (builder) => ({

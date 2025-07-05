@@ -6,7 +6,12 @@ import { borrowRoutes } from "./app/routes/borrow.routes";
 const app: Application = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://lms-deadman.vercel.app", "http://localhost:5173"],
+    credentials: true,
+  })
+);
 bookRoutes(app);
 borrowRoutes(app);
 

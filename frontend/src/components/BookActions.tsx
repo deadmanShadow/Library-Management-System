@@ -4,18 +4,12 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import { useBorrowBookMutation } from "../features/api/apiSlice";
-
-type Book = {
-  _id: string;
-  title: string;
-  copies: number;
-  available: boolean;
-};
+import { Book } from "../shared/types";
 
 type BorrowBookModalProps = {
   open: boolean;
   onClose: () => void;
-  book: Book;
+  book: Pick<Book, "_id" | "title" | "copies" | "available">;
   onSubmit: (params: { quantity: number; dueDate: Date }) => void;
   isLoading: boolean;
 };
